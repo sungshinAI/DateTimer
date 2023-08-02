@@ -27,6 +27,7 @@ public class SelectTimeActivity extends AppCompatActivity {
     private TextView selectedDateTimeTextView; // Done 버튼을 누르면 나오는 날짜와 시간
 
     private List<String> selectedDates = new ArrayList<>(); // SongMe에서 추가. String 타입의 ArrayList selectedDates 선언 및 초기화
+    private static ArrayList<String> accumulatedSelections = new ArrayList<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // SongMe에서 추가. SimpleDateFormat 객체 dateFormat 선언 및 초기화
 
     @Override
@@ -37,7 +38,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         timePicker = findViewById(R.id.timePicker);
         btnDone = findViewById(R.id.btnDone);
         reStart = findViewById(R.id.reStart);
-                tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        tvSelectedDate = findViewById(R.id.tvSelectedDate);
         selectedDateTimeTextView = findViewById(R.id.selectedDateTimeTextView);
 
         String selectedDate = getIntent().getStringExtra("selected_date"); // selectedDate는 선택한 날짜
@@ -49,11 +50,35 @@ public class SelectTimeActivity extends AppCompatActivity {
                 int hourOfDay = timePicker.getHour();
                 int minute = timePicker.getMinute();
 
+
                 String selectedTime = String.format("%02d:%02d", hourOfDay, minute); // selectedTime는 선택한 시간
+                /*
                 showToast("Selected Time: " + selectedTime); // 밑에 잠깐 뜨고 마는 것
+                 */
+
 
                 String selectedDateTime = selectedDate + " " + hourOfDay + ":" + minute; // selectedDateTime는 선택한 날짜와 시간
                 selectedDateTimeTextView.setText("선택한 날짜와 시간 : " + selectedDateTime);
+
+                // 이전 액티비티로부터 선택한 날짜를 받아옵니다.
+                String selectedDate = getIntent().getStringExtra("selected_date");
+
+                /*
+                // 선택한 날짜와 시간을 하나의 문자열로 합칩니다.
+                String selectedDateTime = selectedDate + " " + selectedTime;
+                 */
+
+                // 선택한 날짜와 시간을 ArrayList에 추가합니다.
+                accumulatedSelections.add(selectedDateTime);
+
+                // 누적된 선택 내용을 화면에 표시합니다.
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String dateTime : accumulatedSelections) {
+                    stringBuilder.append(dateTime).append("\n");
+                }
+                selectedDateTimeTextView.setText("누적된 선택 내용:\n" + stringBuilder.toString());
+
+                showToast("선택한 시간: " + selectedTime);
             }
         });
 
@@ -64,7 +89,21 @@ public class SelectTimeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // ChatGPT로부터 추가된 코드를 여기에 추가합니다.
+
+                // "날짜 선택" 버튼 클릭 시, showDatePickerDialog() 메서드를 호출하여 날짜를 선택할 수 있도록 합니다.
+                        tvSelectedDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showDatePickerDialog();
+                    }
+                });
     }
+
+    // Chat Gpt 내용
+    // 추가된 메서드들
+    // showDatePickerDialog()와 updateSelectedDatesTextView() 메서드들은 위에 ChatGPT로부터 제공된 코드에 포함되어 있습니다.
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
