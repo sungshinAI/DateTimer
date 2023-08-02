@@ -86,6 +86,7 @@ public class SelectTimeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SelectTimeActivity.this, SelectDateActivity.class);
+                intent.putStringArrayListExtra("accumulated_selections", accumulatedSelections);
                 startActivity(intent);
             }
         });
