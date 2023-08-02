@@ -88,6 +88,13 @@ public class SelectTimeActivity extends AppCompatActivity {
                  showDatePickerDialog();
              }
          });
+
+        // 누적된 선택 내용을 화면에 표시합니다.
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String dateTime : accumulatedSelections) {
+            stringBuilder.append(dateTime).append("\n");
+        }
+        selectedDateTimeTextView.setText("누적된 선택 내용:\n" + stringBuilder.toString());
     }
 
     private void showDatePickerDialog() { // 날짜 선택 Dialog를 표시하는 메서드
