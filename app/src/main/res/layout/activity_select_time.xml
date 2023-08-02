@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Selected Date: " />
+        android:text="선택한 날짜 : " />
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -28,10 +28,11 @@
 
     <TextView
         android:id="@+id/selectedDateTimeTextView"
-        android:layout_width="381dp"
-        android:layout_height="164dp"
-        android:text="선택한 날짜와 시간 : "
-        android:textSize="20sp" />
+        android:layout_width="386dp"
+        android:layout_height="168dp"
+        android:text="[선택한 날짜와 시간]"
+        android:textColor="#000000"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/reStart"

@@ -22,13 +22,13 @@ public class SelectTimeActivity extends AppCompatActivity {
 
     private TimePicker timePicker;
     private Button btnDone; // Done 버튼
-    private Button reStart; // 이 전페이지로 돌아가는 버튼
-    private TextView tvSelectedDate;
-    private TextView selectedDateTimeTextView; // Done 버튼을 누르면 나오는 날짜와 시간
+    private Button reStart; // 전(날짜 선택) page로 돌아가는 버튼
+    private TextView tvSelectedDate; // "선택한 날짜 : "
+    private TextView selectedDateTimeTextView; // "선택한 날짜와 시간"
 
-    private List<String> selectedDates = new ArrayList<>(); // SongMe에서 추가. String 타입의 ArrayList selectedDates 선언 및 초기화
+    private List<String> selectedDates = new ArrayList<>(); // String 타입의 ArrayList selectedDates 선언 및 초기화
     private static ArrayList<String> accumulatedSelections = new ArrayList<>();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // SongMe에서 추가. SimpleDateFormat 객체 dateFormat 선언 및 초기화
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // SimpleDateFormat 객체 dateFormat 선언 및 초기화
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +41,24 @@ public class SelectTimeActivity extends AppCompatActivity {
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
         selectedDateTimeTextView = findViewById(R.id.selectedDateTimeTextView);
 
+        // "선택한 날짜 : " 띄우기
         String selectedDate = getIntent().getStringExtra("selected_date"); // selectedDate는 선택한 날짜
         tvSelectedDate.setText("선택한 날짜: " + selectedDate);
 
+        // Done 버튼 눌렀을 때
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hourOfDay = timePicker.getHour();
-                int minute = timePicker.getMinute();
+                int hour = timePicker.getHour(); // 시
+                int minute = timePicker.getMinute(); // 분
 
+                String selectedTime = String.format("%02d:%02d", hour, minute); // selectedTime는 선택한 시간
 
-                String selectedTime = String.format("%02d:%02d", hourOfDay, minute); // selectedTime는 선택한 시간
-                /*
-                showToast("Selected Time: " + selectedTime); // 밑에 잠깐 뜨고 마는 것
-                 */
-
-
-                String selectedDateTime = selectedDate + " " + hourOfDay + ":" + minute; // selectedDateTime는 선택한 날짜와 시간
+                String selectedDateTime = selectedDate + " " + hour + ":" + minute; // selectedDateTime는 선택한 날짜와 시간
                 selectedDateTimeTextView.setText("선택한 날짜와 시간 : " + selectedDateTime);
 
                 // 이전 액티비티로부터 선택한 날짜를 받아옵니다.
                 String selectedDate = getIntent().getStringExtra("selected_date");
-
-                /*
-                // 선택한 날짜와 시간을 하나의 문자열로 합칩니다.
-                String selectedDateTime = selectedDate + " " + selectedTime;
-                 */
 
                 // 선택한 날짜와 시간을 ArrayList에 추가합니다.
                 accumulatedSelections.add(selectedDateTime);
@@ -77,47 +69,34 @@ public class SelectTimeActivity extends AppCompatActivity {
                     stringBuilder.append(dateTime).append("\n");
                 }
                 selectedDateTimeTextView.setText("누적된 선택 내용:\n" + stringBuilder.toString());
-
-                showToast("선택한 시간: " + selectedTime);
             }
         });
 
-        reStart.setOnClickListener(new View.OnClickListener() {
+        reStart.setOnClickListener(new View.OnClickListener() { // 날짜 선택 Page로 돌아가기 버튼
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SelectTimeActivity.this, SelectDateActivity.class);
-                intent.putStringArrayListExtra("accumulated_selections", accumulatedSelections);
+                Intent intent = new Intent(SelectTimeActivity.this, SelectDateActivity.class); // Page 전환
+                intent.putStringArrayListExtra("accumulated_selections", accumulatedSelections); // 누적되게 만들어주는 코드
                 startActivity(intent);
             }
         });
 
-        // ChatGPT로부터 추가된 코드를 여기에 추가합니다.
-
-                // "날짜 선택" 버튼 클릭 시, showDatePickerDialog() 메서드를 호출하여 날짜를 선택할 수 있도록 합니다.
-                        tvSelectedDate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showDatePickerDialog();
-                    }
-                });
+        // "날짜 선택" 버튼 클릭 시, showDatePickerDialog() 메서드를 호출하여 날짜를 선택할 수 있도록 합니다.
+         tvSelectedDate.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 showDatePickerDialog();
+             }
+         });
     }
 
-    // Chat Gpt 내용
-    // 추가된 메서드들
-    // showDatePickerDialog()와 updateSelectedDatesTextView() 메서드들은 위에 ChatGPT로부터 제공된 코드에 포함되어 있습니다.
-
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    // 여기서부터 밑부분 SongMe에서 추가
-    private void showDatePickerDialog() { // SongMe에서 추가될 부분. 날짜 선택 Dialog를 표시하는 메서드
+    private void showDatePickerDialog() { // 날짜 선택 Dialog를 표시하는 메서드
         Calendar calendar = Calendar.getInstance(); // 현재 시간으로 Calendar 객체 생성
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog( // SongMe에서 추가될 부분. DatePickerDialog 객체 생성
+        DatePickerDialog datePickerDialog = new DatePickerDialog( // DatePickerDialog 객체 생성
                 this,
                 new DatePickerDialog.OnDateSetListener() { // 날짜 선택 Listener 설정
                     @Override
@@ -140,7 +119,7 @@ public class SelectTimeActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void updateSelectedDatesTextView() { // SongMe에서 추가될 부분. 선택된 날짜들을 텍스트뷰에 업데이트하는 메서드
+    private void updateSelectedDatesTextView() { // 선택된 날짜들을 텍스트뷰에 업데이트하는 메서드
         StringBuilder message = new StringBuilder("Selected Dates :\n"); // 메시지 문자열 생성
         for (String date : selectedDates) { // selectedDates 리스트에 있는 날짜들을 반복하며
             message.append(date).append("\n"); // 메시지에 날자를 추가
